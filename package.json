@@ -1,7 +1,7 @@
 {
   "name": "ChannelSpeed",
   "type": "module",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "private": true,
   "description": "A Chrome extension to set different playback speeds for different YouTube channels.",
   "scripts": {
