@@ -12,16 +12,22 @@ export default defineContentScript({
 
             const savedPlaybackRate = await storage.getItem<string>(`sync:playbackRate-${channel}`)
             if (savedPlaybackRate) {
+              video.setAttribute('data-playback-rate-change', 'true')
               video.playbackRate = Number.parseFloat(savedPlaybackRate)
+              video.removeAttribute('data-playback-rate-change')
             }
             else {
               const defaultPlaybackRate = await storage.getItem<string>('sync:defaultPlaybackRate') || '1'
+              video.setAttribute('data-playback-rate-change', 'true')
               video.playbackRate = Number.parseFloat(defaultPlaybackRate)
+              video.removeAttribute('data-playback-rate-change')
             }
 
             if (!video.hasAttribute('data-ratechange-listener')) {
               video.addEventListener('ratechange', () => {
-                storage.setItem(`sync:playbackRate-${channel}`, video.playbackRate.toString())
+                if (!video.hasAttribute('data-playback-rate-change')) {
+                  storage.setItem(`sync:playbackRate-${channel}`, video.playbackRate.toString())
+                }
               })
               video.setAttribute('data-ratechange-listener', 'true')
             }
