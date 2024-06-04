@@ -19,6 +19,7 @@ function App() {
   const handleSave = (rate: string) => {
     setDefaultPlaybackRate(rate)
     storage.setItem('sync:defaultPlaybackRate', rate)
+    storage.setItem('local:data-playback-rate-change-from-popup', 'true')
   }
 
   const playbackRates = ['0.25', '0.5', '0.75', '1', '1.25', '1.5', '1.75', '2']
