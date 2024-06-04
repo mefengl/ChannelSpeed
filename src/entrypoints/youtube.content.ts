@@ -14,13 +14,17 @@ export default defineContentScript({
             if (savedPlaybackRate) {
               video.setAttribute('data-playback-rate-change', 'true')
               video.playbackRate = Number.parseFloat(savedPlaybackRate)
-              video.removeAttribute('data-playback-rate-change')
+              setTimeout(() => {
+                video.removeAttribute('data-playback-rate-change')
+              }, 3000)
             }
             else {
               const defaultPlaybackRate = await storage.getItem<string>('sync:defaultPlaybackRate') || '1'
               video.setAttribute('data-playback-rate-change', 'true')
               video.playbackRate = Number.parseFloat(defaultPlaybackRate)
-              video.removeAttribute('data-playback-rate-change')
+              setTimeout(() => {
+                video.removeAttribute('data-playback-rate-change')
+              }, 3000)
             }
 
             if (!video.hasAttribute('data-ratechange-listener')) {
@@ -30,11 +34,6 @@ export default defineContentScript({
                   return
                 if (video.hasAttribute('data-playback-rate-change'))
                   return
-                const isChangeFromPopup = await storage.getItem('local:data-playback-rate-change-from-popup')
-                if (isChangeFromPopup) {
-                  storage.removeItem('local:data-playback-rate-change-from-popup')
-                  return
-                }
                 const channel = document.querySelector('a.yt-simple-endpoint.style-scope.yt-formatted-string')?.textContent || 'default'
                 storage.setItem(`sync:playbackRate-${channel}`, video.playbackRate.toString())
               })
