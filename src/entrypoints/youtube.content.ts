@@ -6,6 +6,7 @@ export default defineContentScript({
       position: 'inline',
       onMount: async () => {
         const appliedVideos = new WeakSet<HTMLVideoElement>()
+        let isPluginModifying = false
 
         const applyPlaybackRate = async () => {
           const video = document.querySelector('video')
@@ -19,21 +20,30 @@ export default defineContentScript({
             // Temporarily remove onratechange event listener
             const originalOnRateChange = video.onratechange
             video.onratechange = null
+            isPluginModifying = true
 
             video.playbackRate = savedPlaybackRate
               ? Number.parseFloat(savedPlaybackRate)
               : Number.parseFloat(defaultPlaybackRate)
 
-            // Restore the onratechange event listener only once
-            if (!appliedVideos.has(video)) {
-              video.addEventListener('ratechange', () => {
+            // Add ratechange event listener
+            video.addEventListener('ratechange', () => {
+              if (!isPluginModifying) {
                 storage.setItem(`sync:playbackRate-${channel}`, video.playbackRate.toString())
-              })
-              appliedVideos.add(video)
-            }
+              }
+            })
+
+            isPluginModifying = false
 
             // Restore original onratechange if it was not already set by us
             video.onratechange = originalOnRateChange
+
+            if (!appliedVideos.has(video)) {
+              appliedVideos.add(video)
+            }
+
+            // Ensure UI updates to show the correct playback rate
+            video.dispatchEvent(new Event('ratechange'))
           }
         }
 
