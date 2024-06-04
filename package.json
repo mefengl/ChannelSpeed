@@ -1,9 +1,9 @@
 {
-  "name": "wxt-starter",
+  "name": "ChannelSpeed",
   "type": "module",
-  "version": "0.0.0",
+  "version": "0.4.0",
   "private": true,
-  "description": "manifest.json description",
+  "description": "A Chrome extension to set different playback speeds for different YouTube channels.",
   "scripts": {
     "dev": "wxt",
     "dev:firefox": "wxt -b firefox",
