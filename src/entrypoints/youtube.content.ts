@@ -19,9 +19,12 @@ export default defineContentScript({
               video.playbackRate = Number.parseFloat(defaultPlaybackRate)
             }
 
-            video.addEventListener('ratechange', () => {
-              storage.setItem(`sync:playbackRate-${channel}`, video.playbackRate.toString())
-            })
+            if (!video.hasAttribute('data-ratechange-listener')) {
+              video.addEventListener('ratechange', () => {
+                storage.setItem(`sync:playbackRate-${channel}`, video.playbackRate.toString())
+              })
+              video.setAttribute('data-ratechange-listener', 'true')
+            }
           }
         }
 
