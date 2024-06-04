@@ -28,10 +28,10 @@ export default defineContentScript({
                 const video = document.querySelector('video')
                 if (!video)
                   return
-                if (!video.hasAttribute('data-playback-rate-change')) {
-                  const channel = document.querySelector('a.yt-simple-endpoint.style-scope.yt-formatted-string')?.textContent || 'default'
-                  storage.setItem(`sync:playbackRate-${channel}`, video.playbackRate.toString())
-                }
+                if (video.hasAttribute('data-playback-rate-change'))
+                  return
+                const channel = document.querySelector('a.yt-simple-endpoint.style-scope.yt-formatted-string')?.textContent || 'default'
+                storage.setItem(`sync:playbackRate-${channel}`, video.playbackRate.toString())
               })
               video.setAttribute('data-ratechange-listener', 'true')
             }
