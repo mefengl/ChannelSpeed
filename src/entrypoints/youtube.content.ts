@@ -25,6 +25,9 @@ export default defineContentScript({
 
             if (!video.hasAttribute('data-ratechange-listener')) {
               video.addEventListener('ratechange', () => {
+                const video = document.querySelector('video')
+                if (!video)
+                  return
                 if (!video.hasAttribute('data-playback-rate-change')) {
                   storage.setItem(`sync:playbackRate-${channel}`, video.playbackRate.toString())
                 }
