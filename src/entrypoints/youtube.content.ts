@@ -29,6 +29,7 @@ export default defineContentScript({
                 if (!video)
                   return
                 if (!video.hasAttribute('data-playback-rate-change')) {
+                  const channel = document.querySelector('a.yt-simple-endpoint.style-scope.yt-formatted-string')?.textContent || 'default'
                   storage.setItem(`sync:playbackRate-${channel}`, video.playbackRate.toString())
                 }
               })
